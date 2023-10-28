@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic Tac Toe</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom right, #ff3333, #cc0000);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 5px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff; /* Borders for X and O */
+        }
+    </style>
+</head>
+<body>
+    <h1 id="game-title">TICTACTOE+</h1>
+    <div class="container">
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+        <div id="message" style="text-align: center; margin: 20px; font-size: 24px;"></div>
+    </div>
+
+    <script>
+        const gameTitle = document.getElementById('game-title');
+        const board = document.getElementById('board');
+        const cells = document.querySelectorAll('.cell');
+        const message = document.getElementById('message');
+
+        let currentPlayer = 'X';
+        let moves = 0;
+        let gameEnded = false;
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                if (!cell.textContent && !gameEnded) {
+                    cell.textContent = currentPlayer;
+                    moves++;
+
+                    if (checkWin(currentPlayer)) {
+                        message.textContent = `${currentPlayer} wins!`;
+                        gameEnded = true;
+                        setTimeout(() => {
+                            restartGame();
+                        }, 1500); // Restart after 1.5 seconds
+                    } else if (moves === 9) {
+                        message.textContent = "It's a draw!";
+                        gameEnded = true;
+                        setTimeout(() => {
+                            restartGame();
+                        }, 1500); // Restart after 1.5 seconds
+                    } else {
+                        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    }
+                }
+            });
+        });
+
+        function checkWin(player) {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],  // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],  // Columns
+                [0, 4, 8], [2, 4, 6]              // Diagonals
+            ];
+
+            return winPatterns.some(pattern => {
+                return pattern.every(index => cells[index].textContent === player);
+            });
+        }
+
+        function restartGame() {
+            cells.forEach(cell => {
+                cell.textContent = '';
+            });
+            currentPlayer = 'X';
+            moves = 0;
+            gameEnded = false;
+            message.textContent = '';
+        }
+
+        let clickCount = 0;
+        gameTitle.addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 5) {
+                window.location.href = 'page.html'; // Change the URL to the desired page
+            }
+        });
+    </script>
+</body>
+</html>
